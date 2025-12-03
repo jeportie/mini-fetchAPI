@@ -3,7 +3,10 @@
 //                                                        :::      ::::::::   //
 //   apiFetch.ts                                        :+:      :+:    :+:   //
 //                                                    +:+ +:+         +:+     //
-//   By: jeportie                                      +#+  +:+       +#+        //
+//   By: jeportie <jeportie@42.fr>                  +#+  +:+       +#+        //
+//                                                +#+#+#+#+#+   +#+           //
+//   Created: 2025/12/03 18:31:14 by jeportie          #+#    #+#             //
+//   Updated: 2025/12/03 18:32:58 by jeportie         ###   ########.fr       //
 //                                                                            //
 // ************************************************************************** //
 
@@ -45,8 +48,6 @@ export default class FetchApi {
         body?: BodyFor<P, U>
     ): Promise<ResponseFor<P, U>> {
 
-        let url = endpoint;
-
         const options: RequestInit = {
             method,
             headers: { "Content-Type": "application/json" }
@@ -56,7 +57,7 @@ export default class FetchApi {
             options.body = JSON.stringify(body);
         }
 
-        const res = await fetch(url, options);
+        const res = await fetch(endpoint, options);
         if (!res.ok) {
             throw new Error(`[API ERROR] ${res.status} on ${endpoint}`);
         }
