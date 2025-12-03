@@ -1,0 +1,67 @@
+// ************************************************************************** //
+//                                                                            //
+//                                                        :::      ::::::::   //
+//   apiFetch.ts                                        :+:      :+:    :+:   //
+//                                                    +:+ +:+         +:+     //
+//   By: jeportie                                      +#+  +:+       +#+        //
+//                                                                            //
+// ************************************************************************** //
+
+import type { Route, BodyFor, ResponseFor, UpperMethod, RoutesWithMethod } from "./api-types";
+
+export default class FetchApi {
+    constructor() { }
+
+    get<P extends RoutesWithMethod<"get">>(
+        endpoint: P
+    ): Promise<ResponseFor<P, "GET">> {
+        return this.#request("GET", endpoint);
+    }
+
+    post<P extends RoutesWithMethod<"post">>(
+        endpoint: P,
+        body: BodyFor<P, "POST">
+    ): Promise<ResponseFor<P, "POST">> {
+        return this.#request("POST", endpoint, body);
+    }
+
+    put<P extends RoutesWithMethod<"put">>(
+        endpoint: P,
+        body: BodyFor<P, "PUT">
+    ): Promise<ResponseFor<P, "PUT">> {
+        return this.#request("PUT", endpoint, body);
+    }
+
+    delete<P extends RoutesWithMethod<"delete">>(
+        endpoint: P,
+        body?: BodyFor<P, "DELETE">
+    ): Promise<ResponseFor<P, "DELETE">> {
+        return this.#request("DELETE", endpoint, body);
+    }
+
+    async #request<P extends Route, U extends UpperMethod>(
+        method: U,
+        endpoint: P,
+        body?: BodyFor<P, U>
+    ): Promise<ResponseFor<P, U>> {
+
+        let url = endpoint;
+
+        const options: RequestInit = {
+            method,
+            headers: { "Content-Type": "application/json" }
+        };
+
+        if (body !== undefined) {
+            options.body = JSON.stringify(body);
+        }
+
+        const res = await fetch(url, options);
+        if (!res.ok) {
+            throw new Error(`[API ERROR] ${res.status} on ${endpoint}`);
+        }
+
+        const json = await res.json();
+        return json as ResponseFor<P, U>;
+    }
+}
