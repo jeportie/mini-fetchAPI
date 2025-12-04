@@ -9,12 +9,4 @@
 //   Updated: 2025/12/03 18:43:44 by jeportie         ###   ########.fr       //
 //                                                                            //
 // ************************************************************************** //
-
-export interface ApiRoutes {
-    // Exemple :
-    // "/api/auth/login": {
-    //   method: "POST";
-    //   body: { user: string; pwd: string };
-    //   response: { token: string };
-    // };
-}
+export {};

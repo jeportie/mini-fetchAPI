@@ -1,0 +1,8 @@
+export interface ApiRoutes {
+    // Exemple :
+    // "/api/auth/login": {
+    //   method: "POST";
+    //   body: { user: string; pwd: string };
+    //   response: { token: string };
+    // };
+}

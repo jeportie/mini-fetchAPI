@@ -1,13 +1,2 @@
-// ************************************************************************** //
-//                                                                            //
-//                                                        :::      ::::::::   //
-//   index.ts                                           :+:      :+:    :+:   //
-//                                                    +:+ +:+         +:+     //
-//   By: jeportie <jeportie@42.fr>                  +#+  +:+       +#+        //
-//                                                +#+#+#+#+#+   +#+           //
-//   Created: 2025/12/03 18:38:39 by jeportie          #+#    #+#             //
-//   Updated: 2025/12/03 18:42:05 by jeportie         ###   ########.fr       //
-//                                                                            //
-// ************************************************************************** //
-
-export { default as BaseFetchApi } from "./normal/fetchApi.js";
+// No programmatic API yet – use the CLI (`mini-fetch`) to generate clients.
+export { };

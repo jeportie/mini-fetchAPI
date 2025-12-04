@@ -4,8 +4,12 @@ import fs from "fs";
 import path from "path";
 import { execSync } from "child_process";
 
-const NORMAL_TEMPLATE_DIR = path.resolve("src/normal");
-const SWAGGER_TEMPLATE_DIR = path.resolve("src/swagger");
+const TEMPLATE_DIR = path.resolve("src/templates");
+
+function copyTemplate(src: string, dest: string) {
+    const content = fs.readFileSync(src, "utf8");
+    fs.writeFileSync(dest, content, "utf8");
+}
 
 async function main() {
     console.log("\n🚀 mini-fetch — Typed Fetch API Client Generator\n");
@@ -16,77 +20,48 @@ async function main() {
             name: "mode",
             message: "Choose generation mode:",
             choices: [
-                { name: "Swagger (auto-generate types from /docs/json)", value: "swagger" },
-                { name: "Manual (empty ApiRoutes interface to fill manually)", value: "manual" }
+                { name: "Swagger (auto-generate types)", value: "swagger" },
+                { name: "Manual (fill ApiRoutes yourself)", value: "manual" }
             ]
         }
     ]);
 
-    if (mode === "swagger") {
-        generateSwaggerMode();
-    } else {
-        generateManualMode();
-    }
+    if (mode === "swagger") return swaggerMode();
+    return manualMode();
 }
 
-function generateSwaggerMode() {
-    console.log("\n📡 Swagger mode selected");
+async function swaggerMode() {
+    const { url, out } = await inquirer.prompt([
+        { type: "input", name: "url", message: "Swagger JSON URL:" },
+        { type: "input", name: "out", message: "Output folder:", default: "src/api" }
+    ]);
 
-    inquirer.prompt([
-        {
-            type: "input",
-            name: "url",
-            message: "Swagger URL (ex: http://localhost:5000/docs/json):"
-        },
-        {
-            type: "input",
-            name: "out",
-            message: "Output folder (ex: src/api):",
-            default: "src/api"
-        }
-    ]).then(({ url, out }) => {
-        console.log("📥 Fetching Swagger…");
+    fs.mkdirSync(out, { recursive: true });
 
-        // 1. Create output folder
-        fs.mkdirSync(out, { recursive: true });
-
-        // 2. Run openapi-typescript
-        execSync(`npx openapi-typescript ${url} -o ${out}/swagger-types.ts`, {
-            stdio: "inherit"
-        });
-
-        // 3. Copy template fetchApi.ts + api-types.ts
-        fs.copyFileSync(`${SWAGGER_TEMPLATE_DIR}/fetchApi.ts`, `${out}/fetchApi.ts`);
-        fs.copyFileSync(`${SWAGGER_TEMPLATE_DIR}/api-types.ts`, `${out}/api-types.ts`);
-
-        console.log("\n✨ DONE! Swagger API Client generated in:");
-        console.log(`   → ${out}/`);
-        console.log("   You can now import it like:");
-        console.log("   import Api from './api/fetchApi';\n");
+    console.log("📥 Fetching Swagger…");
+    execSync(`npx openapi-typescript ${url} -o ${out}/swagger-types.ts`, {
+        stdio: "inherit"
     });
+
+    const tpl = path.join(TEMPLATE_DIR, "swagger");
+    copyTemplate(path.join(tpl, "fetchApi.ts.txt"), `${out}/fetchApi.ts`);
+    copyTemplate(path.join(tpl, "api-types.ts.txt"), `${out}/api-types.ts`);
+
+    console.log("\n✨ Swagger API Client generated in:", out);
 }
 
-function generateManualMode() {
-    console.log("\n📝 Manual mode selected");
+async function manualMode() {
+    const { out } = await inquirer.prompt([
+        { type: "input", name: "out", message: "Output folder:", default: "src/api" }
+    ]);
 
-    inquirer.prompt([
-        {
-            type: "input",
-            name: "out",
-            message: "Output folder (ex: src/api):",
-            default: "src/api"
-        }
-    ]).then(({ out }) => {
+    fs.mkdirSync(out, { recursive: true });
 
-        fs.mkdirSync(out, { recursive: true });
+    const tpl = path.join(TEMPLATE_DIR, "manual");
+    copyTemplate(path.join(tpl, "fetchApi.ts.txt"), `${out}/fetchApi.ts`);
+    copyTemplate(path.join(tpl, "api-types.ts.txt"), `${out}/api-types.ts`);
 
-        fs.copyFileSync(`${NORMAL_TEMPLATE_DIR}/fetchApi.ts`, `${out}/fetchApi.ts`);
-        fs.copyFileSync(`${NORMAL_TEMPLATE_DIR}/api-types.ts`, `${out}/api-types.ts`);
-
-        console.log("\n✨ Manual API Client generated in:");
-        console.log(`   → ${out}/`);
-        console.log("   Fill ApiRoutes manually to activate autocomplete.\n");
-    });
+    console.log("\n✨ Manual API Client generated in:", out);
 }
 
 main();

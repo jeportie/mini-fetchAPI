@@ -1,15 +1,3 @@
-// ************************************************************************** //
-//                                                                            //
-//                                                        :::      ::::::::   //
-//   apiFetch.ts                                        :+:      :+:    :+:   //
-//                                                    +:+ +:+         +:+     //
-//   By: jeportie <jeportie@42.fr>                  +#+  +:+       +#+        //
-//                                                +#+#+#+#+#+   +#+           //
-//   Created: 2025/12/03 18:31:14 by jeportie          #+#    #+#             //
-//   Updated: 2025/12/03 18:32:58 by jeportie         ###   ########.fr       //
-//                                                                            //
-// ************************************************************************** //
-
 import type { Route, BodyFor, ResponseFor, UpperMethod, RoutesWithMethod } from "./api-types";
 
 export default class FetchApi {
@@ -57,9 +45,9 @@ export default class FetchApi {
             options.body = JSON.stringify(body);
         }
 
-        const res = await fetch(endpoint, options);
+        const res = await fetch(String(endpoint), options);
         if (!res.ok) {
-            throw new Error(`[API ERROR] ${res.status} on ${endpoint}`);
+            throw new Error(`[API ERROR] ${res.status} on ${String(endpoint)}`);
         }
 
         const json = await res.json();
