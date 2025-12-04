@@ -4,22 +4,21 @@
     "description": "Typed Fetch API client generator (Swagger or manual) for JS/TS projects",
     "type": "module",
     "bin": {
-        "mini-fetch": "dist/cli.cjs"
+        "mini-fetch": "dist/cli.js"
     },
     "main": "dist/index.js",
     "types": "dist/index.d.ts",
     "scripts": {
-        "build": "tsc && mv dist/cli.js dist/cli.cjs",
+        "build": "tsc",
         "prepare": "npm run build"
     },
     "author": "jeportie",
     "license": "MIT",
     "dependencies": {
-        "inquirer": "^9.3.0",
+        "inquirer": "^13.0.2",
         "openapi-typescript": "^7.10.1"
     },
     "devDependencies": {
-        "@types/inquirer": "^9.0.9",
         "@types/node": "^24.10.1",
         "typescript": "^5.7.0"
     }

@@ -1,10 +1,15 @@
 #!/usr/bin/env node
 import inquirer from "inquirer";
-import fs from "fs";
-import path from "path";
-import { execSync } from "child_process";
+import fs from "node:fs";
+import path from "node:path";
+import { execSync } from "node:child_process";
+import { fileURLToPath } from "node:url";
 
-const TEMPLATE_DIR = path.resolve("src/templates");
+// Recréer __dirname en ESM :
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+const TEMPLATE_DIR = path.resolve(__dirname, "templates");
 
 function copyTemplate(src: string, dest: string) {
     const content = fs.readFileSync(src, "utf8");
@@ -57,7 +62,7 @@ async function manualMode() {
 
     fs.mkdirSync(out, { recursive: true });
 
-    const tpl = path.join(TEMPLATE_DIR, "manual");
+    const tpl = path.join(TEMPLATE_DIR, "normal");
     copyTemplate(path.join(tpl, "fetchApi.ts.txt"), `${out}/fetchApi.ts`);
     copyTemplate(path.join(tpl, "api-types.ts.txt"), `${out}/api-types.ts`);
 
