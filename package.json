@@ -10,6 +10,7 @@
     "types": "dist/index.d.ts",
     "scripts": {
         "build": "tsc",
+        "postbuild": "cpx \"src/templates/**/*\" dist/templates",
         "prepare": "npm run build"
     },
     "author": "jeportie",
@@ -21,6 +22,7 @@
     "devDependencies": {
         "@types/inquirer": "^9.0.9",
         "@types/node": "^24.10.1",
+        "cpx": "^1.5.0",
         "typescript": "^5.7.0"
     }
 }
