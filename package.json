@@ -19,6 +19,7 @@
         "openapi-typescript": "^7.10.1"
     },
     "devDependencies": {
+        "@types/inquirer": "^9.0.9",
         "@types/node": "^24.10.1",
         "typescript": "^5.7.0"
     }
