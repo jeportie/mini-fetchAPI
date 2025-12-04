@@ -2,24 +2,16 @@
     "name": "@jeportie/mini-fetch",
     "version": "0.1.0",
     "description": "Typed Fetch API client generator (Swagger or manual) for JS/TS projects",
-    "main": "dist/index.js",
-    "types": "dist/index.d.ts",
     "type": "module",
     "bin": {
-        "mini-fetch": "dist/cli.js"
+        "mini-fetch": "dist/cli.cjs"
     },
+    "main": "dist/index.js",
+    "types": "dist/index.d.ts",
     "scripts": {
-        "build": "tsc",
+        "build": "tsc && mv dist/cli.js dist/cli.cjs",
         "prepare": "npm run build"
     },
-    "keywords": [
-        "fetch",
-        "typescript",
-        "openapi",
-        "swagger",
-        "client",
-        "generator"
-    ],
     "author": "jeportie",
     "license": "MIT",
     "dependencies": {
