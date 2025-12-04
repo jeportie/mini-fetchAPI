@@ -9,7 +9,7 @@
     "main": "dist/index.js",
     "types": "dist/index.d.ts",
     "scripts": {
-        "build": "tsc",
+        "build": "tsc && chmod +x dist/cli.js",
         "postbuild": "cpx \"src/templates/**/*\" dist/templates",
         "prepare": "npm run build"
     },
