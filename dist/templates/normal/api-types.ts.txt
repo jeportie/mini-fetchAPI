@@ -1,0 +1,24 @@
+// ================================================
+// MANUAL API ROUTES — Typed routes for mini-fetch
+// ================================================
+
+// All entires MUST follow this structure :
+// "route": {
+//     method: "GET" | "POST" | "PUT" | "DELETE";
+//     body?: {...};      // uniquement si POST/PUT/DELETE
+//     response: {...};
+// };
+
+export interface ApiRoutes {
+    // "auth/login": {
+    //     method: "POST";
+    //     body: { user: string; pwd: string };
+    //     response: { token: string };
+    // };
+}
+
+// DO NOT TOUCH OR MODIFY 
+export type RoutesWithMethod<M extends ApiRoutes[keyof ApiRoutes]["method"]> = {
+    [K in keyof ApiRoutes]: ApiRoutes[K]["method"] extends M ? K : never
+}[keyof ApiRoutes];
+
