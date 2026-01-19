@@ -6,11 +6,10 @@
 //   By: jeportie <jeromep.dev@gmail.com>                                     //
 //                                                                            //
 //   Created: 2026/01/14 13:25:29 by jeportie                                 //
-//   Updated: 2026/01/15 20:16:09 by jeportie                                 //
+//   Updated: 2026/01/19 17:29:00 by jeportie                                 //
 //                                                                            //
 // ************************************************************************** //
 
-import { routeMeta } from "./routeMeta";
 export type HttpMethods = "GET" | "POST" | "PUT" | "DELETE";
 
 interface MethodsMap {
@@ -22,25 +21,6 @@ interface MethodsMap {
 
 export type ApiEndpoints<Schema> = keyof Schema;
 export type EndpointKey<S> = Extract<keyof S, string>;
-
-export type FilterRoutes<
-  Schema,
-  M extends HttpMethods
-> = {
-  [E in EndpointKey<Schema>]: Schema[E] extends Record<MethodsMap[M], any> ? E : never;
-}[EndpointKey<Schema>];
-
-export type RouteWithMethod<
-  Schema,
-  M extends HttpMethods
-> = {
-  [E in EndpointKey<Schema>]:
-  E extends keyof typeof routeMeta
-  ? typeof routeMeta[E]["method"] extends M
-  ? E
-  : never
-  : never
-}[EndpointKey<Schema>];
 
 type ApiOperation<
   Schema,
@@ -74,15 +54,3 @@ export type ApiParams<
   E extends keyof Schema,
   M extends HttpMethods
 > = ParametersOf<ApiOperation<Schema, E, M>>;
-
-// import { paths } from "../apiSchema";
-// type OpenApiSchema = paths;
-
-// export type TypeLog<T> = T extends any ? T : never;
-// logs for debbuging (hover on Checks to see the type result)
-// type CheckEndpoints = TypeLog<ApiEndpoints<OpenApiSchema>>;
-// type CheckFilter = TypeLog<FilterRoutes<"GET">>;
-// type CheckOperation = TypeLog<ApiOperation<"/api/auth/register", "POST">>
-// type CheckBody = TypeLog<ApiBody<OpenApiSchema, "/api/auth/register", "POST">>
-// type CheckResponses = TypeLog<ApiReturn<"/api/auth/register", "POST">>
-// type CheckParams = TypeLog<ApiParams<"/api/auth/register", "POST">>
