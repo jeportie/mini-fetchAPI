@@ -10,6 +10,7 @@
 //                                                                            //
 // ************************************************************************** //
 
+import { routeMeta } from "./routeMeta";
 export type HttpMethods = "GET" | "POST" | "PUT" | "DELETE";
 
 interface MethodsMap {
@@ -27,6 +28,18 @@ export type FilterRoutes<
   M extends HttpMethods
 > = {
   [E in EndpointKey<Schema>]: Schema[E] extends Record<MethodsMap[M], any> ? E : never;
+}[EndpointKey<Schema>];
+
+export type RouteWithMethod<
+  Schema,
+  M extends HttpMethods
+> = {
+  [E in EndpointKey<Schema>]:
+  E extends keyof typeof routeMeta
+  ? typeof routeMeta[E]["method"] extends M
+  ? E
+  : never
+  : never
 }[EndpointKey<Schema>];
 
 type ApiOperation<

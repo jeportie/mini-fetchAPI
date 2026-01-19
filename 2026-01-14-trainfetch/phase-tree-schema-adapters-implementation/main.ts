@@ -15,4 +15,3 @@ import { paths } from "./apiSchema";
 
 export const api = new FetchApi<paths>("example.com");
 
-const data = await api.get("/api/user/me");

@@ -12,8 +12,6 @@
 
 import { FilterRoutes, ApiBody, HttpMethods, ApiReturn, EndpointKey } from "./types";
 
-// TODO:  enable JSdocs comment in autocomplete by parsing the ones included in open-api generated types
-
 export default class FetchApi<S> {
   #baseUrl: string;
 
