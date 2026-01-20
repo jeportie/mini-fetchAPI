@@ -6,41 +6,42 @@
 //   By: jeportie <jeromep.dev@gmail.com>                                     //
 //                                                                            //
 //   Created: 2026/01/14 13:25:21 by jeportie                                 //
-//   Updated: 2026/01/15 20:20:39 by jeportie                                 //
+//   Updated: 2026/01/19 22:30:51 by jeportie                                 //
 //                                                                            //
 // ************************************************************************** //
 
 import { FilterRoutes, ApiBody, HttpMethods, ApiReturn, EndpointKey } from "./types";
+import { ApiRegistry } from "./apiRegistry";
 
-export default class FetchApi<S> {
-  #baseUrl: string;
+export default class FetchApi<D extends keyof ApiRegistry> {
+  #baseUrl: D;
 
-  constructor(baseUrl: string) {
+  constructor(baseUrl: D) {
     this.#baseUrl = baseUrl;
   }
 
-  get<E extends FilterRoutes<S, "GET">>(endoint: E) {
+  get<E extends FilterRoutes<ApiRegistry[D], "GET">>(endoint: E) {
     return this.#request(endoint, "GET");
   }
 
-  post<E extends FilterRoutes<S, "POST">>(endoint: E, body: ApiBody<S, E, "POST">) {
+  post<E extends FilterRoutes<ApiRegistry[D], "POST">>(endoint: E, body: ApiBody<ApiRegistry[D], E, "POST">) {
     return this.#request(endoint, "POST", body);
   }
 
-  put<E extends FilterRoutes<S, "PUT">>(endoint: E, body: ApiBody<S, E, "PUT">) {
+  put<E extends FilterRoutes<ApiRegistry[D], "PUT">>(endoint: E, body: ApiBody<ApiRegistry[D], E, "PUT">) {
     return this.#request(endoint, "PUT", body);
   }
 
-  delete<E extends FilterRoutes<S, "DELETE">>(endoint: E) {
+  delete<E extends FilterRoutes<ApiRegistry[D], "DELETE">>(endoint: E) {
     return this.#request(endoint, "DELETE");
   }
 
-  async #request<E extends EndpointKey<S>, M extends HttpMethods>(
+  async #request<E extends EndpointKey<ApiRegistry[D]>, M extends HttpMethods>(
     endpoint: E,
     method: M,
-    body?: ApiBody<S, E, M>
+    body?: ApiBody<ApiRegistry[D], E, M>
   )
-    : Promise<ApiReturn<S, E, M>> {
+    : Promise<ApiReturn<ApiRegistry[D], E, M>> {
     const url = this.#baseUrl + endpoint;
 
     const options: RequestInit = {
@@ -63,6 +64,6 @@ export default class FetchApi<S> {
       throw new Error(`[API Error]: ${response.status} from: %{endpoint}`);
     }
 
-    return response.json() as Promise<ApiReturn<S, E, M>>;
+    return response.json() as Promise<ApiReturn<ApiRegistry[D], E, M>>;
   }
 }
